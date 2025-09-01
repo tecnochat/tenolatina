@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  # Aplicación principal TecnoBot SAAS
+  tecnobot-saas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: tecnobot-saas
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - LOG_LEVEL=info
+      # Supabase (usar variables de entorno del host)
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      # JWT
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=7d
+      - JWT_REFRESH_EXPIRES_IN=30d
+      # OpenAI
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=gpt-3.5-turbo
+      # Google APIs
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      # Redis para caché
+      - REDIS_URL=redis://redis:6379
+      # Rate limiting
+      - RATE_LIMIT_WINDOW=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - ./sessions:/app/sessions
+      - ./temp:/app/temp
+    depends_on:
+      - redis
+    networks:
+      - tecnobot-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis para caché y sesiones
+  redis:
+    image: redis:7-alpine
+    container_name: tecnobot-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - tecnobot-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx como reverse proxy (opcional)
+  nginx:
+    image: nginx:alpine
+    container_name: tecnobot-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - tecnobot-saas
+    networks:
+      - tecnobot-network
+    profiles:
+      - production
+
+  # Servicio de monitoreo (opcional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: tecnobot-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - tecnobot-network
+    profiles:
+      - monitoring
+
+  # Grafana para visualización (opcional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: tecnobot-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    depends_on:
+      - prometheus
+    networks:
+      - tecnobot-network
+    profiles:
+      - monitoring
+
+volumes:
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  tecnobot-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
