@@ -3,7 +3,7 @@
 ## Información General
 
 **Versión:** 1.0.0  
-**Base URL:** `http://localhost:3010/api`  
+**Base URL:** `http://localhost:3020/api`  
 **Autenticación:** JWT Bearer Token  
 **Formato de respuesta:** JSON  
 

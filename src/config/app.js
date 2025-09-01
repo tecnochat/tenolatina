@@ -10,7 +10,7 @@ dotenv.config()
 export const AppConfig = {
     // Configuración del servidor
     server: {
-        port: parseInt(process.env.PORT) || 3010,
+        port: parseInt(process.env.PORT) || 3020,
         memoryLimit: parseInt(process.env.MEMORY_LIMIT) || 512,
         nodeEnv: process.env.NODE_ENV || 'development',
         debugMode: process.env.DEBUG_MODE === 'true',

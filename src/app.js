@@ -18,7 +18,7 @@ import { createRouterFlow } from './flows/router/index.js'
 dotenv.config()
 
 // Variables globales
-const PORT = process.env.PORT ?? 3010
+const PORT = process.env.PORT ?? 3020
 const processedMessages = new Set()
 const messageRateLimit = new Map()
 

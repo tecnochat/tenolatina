@@ -7,7 +7,7 @@ const axios = require('axios');
 const colors = require('colors');
 
 // Configuración base
-const BASE_URL = 'http://localhost:3010/api';
+const BASE_URL = 'http://localhost:3020/api';
 let authToken = null;
 let testTenantId = null;
 let testChatbotId = null;

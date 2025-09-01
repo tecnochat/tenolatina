@@ -6,10 +6,10 @@
 module.exports = {
   // Configuración del servidor
   server: {
-    port: process.env.PORT || 3010,
+    port: process.env.PORT || 3020,
     host: process.env.HOST || 'localhost',
     cors: {
-      origin: process.env.CORS_ORIGIN || ['http://localhost:3000', 'http://localhost:3010'],
+      origin: process.env.CORS_ORIGIN || ['http://localhost:3000', 'http://localhost:3020'],
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-ID']

@@ -21,11 +21,11 @@
     "db:reset": "node scripts/reset.js",
     "build": "npm run lint && npm run test",
     "docker:build": "docker build -t tecnobot-saas .",
-    "docker:run": "docker run -p 3010:3010 --env-file .env tecnobot-saas",
+    "docker:run": "docker run -p 3020:3020 --env-file .env tecnobot-saas",
     "docker:dev": "docker-compose up --build",
     "logs": "tail -f logs/combined.log",
     "logs:error": "tail -f logs/error.log",
-    "health": "curl -f http://localhost:3010/health || exit 1",
+    "health": "curl -f http://localhost:3020/health || exit 1",
     "precommit": "npm run lint && npm run test",
     "postinstall": "node scripts/setup.js",
     "crud": "node pruebaCrud/server.js"

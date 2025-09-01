@@ -48,7 +48,7 @@ class DevServer {
         
         // Configuración de desarrollo
         this.config = {
-            port: process.env.PORT || 3010,
+            port: process.env.PORT || 3020,
             host: process.env.HOST || 'localhost',
             watchPaths: [
                 'src/**/*.js',
