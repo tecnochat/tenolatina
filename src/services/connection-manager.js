@@ -13,7 +13,7 @@ class ConnectionManager extends EventEmitter {
         this.isConnected = false
         this.lastConnection = Date.now()
         this.pingInterval = null
-        this.healthCheckInterval = 15000 // Ping cada 15 segundos para Railway
+        this.healthCheckInterval = 10000 // Ping cada 10 segundos para Railway (optimizado para USync)
     }
 
     async init() {

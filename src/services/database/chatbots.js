@@ -113,7 +113,7 @@ export const ChatbotService = {
     async getActiveChatbotForPort() {
         const connection = await pool.getConnection()
         try {
-            const port = process.env.PORT || 3020
+            const port = process.env.PORT || 3019
             const userId = await PortAssignmentService.getUserIdByPort(port)
 
             if (!userId) {

@@ -62,12 +62,12 @@ export const OpenAIService = {
 
             console.log('🤖 OpenAI: Total de mensajes:', fullMessages.length)
 
-            // Configuración específica según el tipo de respuesta "gpt-3.5-turbo"
+            // Configuración específica según el tipo de respuesta "gpt-4o"
             const config = {
                 model: "gpt-4o",
                 messages: fullMessages,
                 temperature: 0.5,
-                max_tokens: 200,
+                max_tokens: 100,
                 presence_penalty: 0.3,
                 frequency_penalty: 0.3,
                 top_p: 0.9,
@@ -77,7 +77,7 @@ export const OpenAIService = {
             // Ajustar configuración para respuestas de audio
             if (isAudioResponse) {
                 config.temperature = 0.5
-                config.max_tokens = 200
+                config.max_tokens = 100
                 config.presence_penalty = 0.3
                 config.frequency_penalty = 0.3
                 config.top_p = 0.9

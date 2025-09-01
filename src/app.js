@@ -18,7 +18,7 @@ import { createRouterFlow } from './flows/router/index.js'
 dotenv.config()
 
 // Variables globales
-const PORT = process.env.PORT ?? 3020
+const PORT = process.env.PORT ?? 3019
 const processedMessages = new Set()
 const messageRateLimit = new Map()
 
@@ -60,15 +60,14 @@ const main = async () => {
         // Inicializar provider con configuraciones optimizadas para Railway
         const adapterProvider = createProvider(Provider, {
             name: 'bot-session',
-            printQRInTerminal: true,
             markOnlineOnConnect: false,
-            // Timeouts y keepalive optimizados
-            connectTimeoutMs: 60000,
-            defaultQueryTimeoutMs: 30000,
-            keepAliveIntervalMs: 15000,
-            // Reintentos y estabilidad
-            retryRequestDelayMs: 2000,
-            maxMsgRetryCount: 5,
+            // Timeouts y keepalive optimizados para USync
+            connectTimeoutMs: 90000,
+            defaultQueryTimeoutMs: 60000,
+            keepAliveIntervalMs: 10000,
+            // Reintentos y estabilidad mejorados
+            retryRequestDelayMs: 3000,
+            maxMsgRetryCount: 8,
             // Reducir consumo y operaciones costosas
             generateHighQualityLinkPreview: false,
             syncFullHistory: false,
